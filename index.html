@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Love Effect</title>
+    <style>
+        /* Genel Sayfa Ayarları */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Matrix Arka Plan Kanvası */
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* İçerik Katmanı */
+        #content-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Sırayla Gelen Beyaz Yazılar */
+        .step {
+            position: absolute;
+            color: #ffffff;
+            font-size: 3.8rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px #ffffff, 0 0 30px #ff3366;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            text-align: center;
+        }
+
+        /* Kalp Ekranı */
+        #heart-screen {
+            display: none;
+            position: absolute;
+            width: 540px;
+            height: 520px;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+            animation: heartbeat 1.2s infinite;
+        }
+
+        /* SVG Kalp Çerçevesi */
+        .heart-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 20px #ff3366) drop-shadow(0 0 40px #ff0055);
+            overflow: visible;
+        }
+
+        /* Kalbin İçindeki Yazı Ayarı */
+        .love-text {
+            position: relative;
+            z-index: 3;
+            color: #ffffff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px #ff3366, 0 0 20px #ff0055;
+            text-align: center;
+            margin-top: 15px;
+            padding: 0 20px;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.08); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.04); }
+            60% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div id="content-container">
+        <div id="step3" class="step">3</div>
+        <div id="step2" class="step">2</div>
+        <div id="step1" class="step">1</div>
+        <div id="stepSey" class="step">Eeee</div>
+        <div id="stepEeee" class="step">Şeyy</div>
+        <div id="stepSenin" class="step">Senin</div>
+        <div id="stepIcin" class="step">İçin</div>
+        <div id="stepYaptim" class="step">Yaptım</div>
+        <div id="stepGuzelim" class="step">Güzelimm</div>
+
+        <div id="heart-screen">
+            <svg class="heart-svg" viewBox="-2 -2 36 33">
+                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+                c6.5-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z" fill="none" stroke="#ff3366" stroke-width="2"/>
+            </svg>
+            <div class="love-text">Seni Seviyorummm İyiki Varsınn</div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. KISIM: Matrix Arka Plan Efekti (Pembe Tonları) ---
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = "0123456789ABCDEFabcdef*+-%#@&<>~SeniSeviyorum";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#ff3399'; 
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 33);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+
+        // --- 2. KISIM: Zaman Ayarlı Metin ve Kalp Geçişleri ---
+        setTimeout(() => { document.getElementById('step3').style.opacity = '1'; }, 400);
+        setTimeout(() => { document.getElementById('step3').style.opacity = '0'; }, 1100);
+
+        setTimeout(() => { document.getElementById('step2').style.opacity = '1'; }, 1300);
+        setTimeout(() => { document.getElementById('step2').style.opacity = '0'; }, 2000);
+
+        setTimeout(() => { document.getElementById('step1').style.opacity = '1'; }, 2200);
+        setTimeout(() => { document.getElementById('step1').style.opacity = '0'; }, 2900);
+
+        // "Şeyy eeee senin için yaptım güzelim" geçişleri
+        setTimeout(() => { document.getElementById('stepSey').style.opacity = '1'; }, 3100);
+        setTimeout(() => { document.getElementById('stepSey').style.opacity = '0'; }, 3800);
+
+        setTimeout(() => { document.getElementById('stepEeee').style.opacity = '1'; }, 4000);
+        setTimeout(() => { document.getElementById('stepEeee').style.opacity = '0'; }, 4700);
+
+        setTimeout(() => { document.getElementById('stepSenin').style.opacity = '1'; }, 4900);
+        setTimeout(() => { document.getElementById('stepSenin').style.opacity = '0'; }, 5600);
+
+        setTimeout(() => { document.getElementById('stepIcin').style.opacity = '1'; }, 5800);
+        setTimeout(() => { document.getElementById('stepIcin').style.opacity = '0'; }, 6500);
+
+        setTimeout(() => { document.getElementById('stepYaptim').style.opacity = '1'; }, 6700);
+        setTimeout(() => { document.getElementById('stepYaptim').style.opacity = '0'; }, 7400);
+
+        setTimeout(() => { document.getElementById('stepGuzelim').style.opacity = '1'; }, 7600);
+        setTimeout(() => { document.getElementById('stepGuzelim').style.opacity = '0'; }, 8300);
+
+        // En son kalp ve içindeki yazı
+        setTimeout(() => {
+            const heartScreen = document.getElementById('heart-screen');
+            heartScreen.style.display = 'flex';
+            setTimeout(() => { heartScreen.style.opacity = '1'; }, 50);
+        }, 8500);
+    </script>
+</body>
+</html>
